@@ -3,13 +3,13 @@ import pygame as pg
 vec = pg.math.Vector2
 
 FPS = 59
-FIELD_COLOR = (48, 39, 32)
-BG_COLOR = (24, 89, 117)
+FIELD_COLOR = (45, 45, 45)
+BG_COLOR = (25, 25, 25)
 
 SPRITE_DIR_PATH = "assets/sprites"
-FONT_PATH = "assets/font/FREAKSOFNATUREMASSIVE.ttf"
+FONT_PATH = "assets/font/Kawai_pixel.TTF"
 
-ANIM_TIME_INTERVAL = 150  # milliseconds
+ANIM_TIME_INTERVAL = 500  # milliseconds
 FAST_ANIM_TIME_INTERVAL = 15
 
 TILE_SIZE = 40

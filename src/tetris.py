@@ -8,18 +8,18 @@ class Text:
         self.font = ft.Font(FONT_PATH)
 
     def draw(self):
-        self.font.render_to(self.app.screen, (WIN_W * 0.595, WIN_H * 0.02),
-                            text="TETRIS", fgcolor="white",
-                            size=TILE_SIZE * 1.65, bgcolor="black")
-        self.font.render_to(self.app.screen, (WIN_W * 0.65, WIN_H * 0.2),
-                            text="NEXT", fgcolor="orange",
-                            size=TILE_SIZE * 1.4, bgcolor="black")
-        self.font.render_to(self.app.screen, (WIN_W * 0.65, WIN_H * 0.7),
-                            text="SCORE", fgcolor="orange",
-                            size=TILE_SIZE * 1.4, bgcolor="black")
+        self.font.render_to(self.app.screen, (WIN_W * 0.61, WIN_H * 0.04),
+                            text="TETRIS", fgcolor=(233, 175, 135),
+                            size=TILE_SIZE * 1.2)
+        self.font.render_to(self.app.screen, (WIN_W * 0.7, WIN_H * 0.25),
+                            text="NEXT", fgcolor=(233, 135, 193),
+                            size=TILE_SIZE)
         self.font.render_to(self.app.screen, (WIN_W * 0.65, WIN_H * 0.8),
+                            text="SCORE", fgcolor=(151, 135, 233),
+                            size=TILE_SIZE)
+        self.font.render_to(self.app.screen, (WIN_W * 0.65, WIN_H * 0.88),
                             text=f"{self.app.tetris.score}", fgcolor="white",
-                            size=TILE_SIZE * 1.8)
+                            size=TILE_SIZE)
 
 
 class Tetris:
@@ -93,7 +93,7 @@ class Tetris:
     def draw_grid(self):
         for x in range(FIELD_W):
             for y in range(FIELD_H):
-                pg.draw.rect(self.app.screen, "black",
+                pg.draw.rect(self.app.screen, BG_COLOR,
                              (x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE), 1)
 
     def update(self):
