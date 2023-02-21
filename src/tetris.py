@@ -1,5 +1,9 @@
 import pygame.freetype as ft
-from src.tetromino import *
+from src.tetromino import Tetromino
+from src.settings import *
+
+from src.button import Button
+import sys
 
 
 class Text:
@@ -30,10 +34,11 @@ class Tetris:
         self.tetromino = Tetromino(self)
         self.next_tetromino = Tetromino(self, current=False)
         self.speed_up = False
+        self.game_over_flag = False
 
         self.score = 0
         self.full_lines = 0
-        self.points_per_lines = {0: 0, 1: 100, 2: 300, 3: 700, 4: 1500}
+        self.points_per_lines = {0: 0, 1: 10, 2: 20, 3: 50, 4: 100}
 
     def get_score(self):
         self.score += self.points_per_lines[self.full_lines]
@@ -41,7 +46,7 @@ class Tetris:
 
     def check_full_lines(self):
         row = FIELD_H - 1
-        for y in range(FIELD_H -1,  -1, -1):
+        for y in range(FIELD_H - 1, -1, -1):
             for x in range(FIELD_W):
                 self.field_array[row][x] = self.field_array[y][x]
 
@@ -72,7 +77,7 @@ class Tetris:
     def check_tetromino_landing(self):
         if self.tetromino.landing:
             if self.is_game_over():
-                self.__init__(self.app)
+                self.game_over_flag = True
             else:
                 self.speed_up = False
                 self.put_tetromino_blocks_in_array()
@@ -108,5 +113,3 @@ class Tetris:
     def draw(self):
         self.draw_grid()
         self.sprite_group.draw(self.app.screen)
-
-

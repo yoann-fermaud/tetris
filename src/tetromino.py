@@ -44,7 +44,7 @@ class Tetromino:
     def __init__(self, tetris, current=True):
         self.tetris = tetris
         self.shape = random.choice(list(TETROMINOES.keys()))
-        self.image = random.choice(tetris.app.images)
+        self.image = tetris.app.images[int(self.shape)]
         self.blocks = [Block(self, pos) for pos in TETROMINOES[self.shape]]
         self.landing = False
         self.current = current
