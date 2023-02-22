@@ -1,9 +1,7 @@
+import json
 import pygame.freetype as ft
 from src.tetromino import Tetromino
 from src.settings import *
-
-from src.button import Button
-import sys
 
 
 class Text:
@@ -13,17 +11,13 @@ class Text:
 
     def draw(self):
         self.font.render_to(self.app.screen, (WIN_W * 0.65, WIN_H * 0.04),
-                            text="TETRIS", fgcolor=(233, 175, 135),
-                            size=60)
+                            text="TETRIS", fgcolor=(233, 175, 135), size=60)
         self.font.render_to(self.app.screen, (WIN_W * 0.72, WIN_H * 0.25),
-                            text="NEXT", fgcolor=(233, 135, 193),
-                            size=50)
+                            text="NEXT", fgcolor=(233, 135, 193), size=50)
         self.font.render_to(self.app.screen, (WIN_W * 0.7, WIN_H * 0.8),
-                            text="SCORE", fgcolor=(151, 135, 233),
-                            size=50)
+                            text="SCORE", fgcolor=(151, 135, 233), size=50)
         self.font.render_to(self.app.screen, (WIN_W * 0.7, WIN_H * 0.88),
-                            text=f"{self.app.tetris.score}", fgcolor="white",
-                            size=45)
+                            text=f"{self.app.tetris.score}", fgcolor="white", size=45)
 
 
 class Tetris:
@@ -44,12 +38,27 @@ class Tetris:
         self.score += self.points_per_lines[self.full_lines]
         self.full_lines = 0
 
+    def save_score(self):
+        try:
+            with open("data/score.json", "r") as file:
+                data = json.load(file)
+
+        except ValueError:
+            data = {
+                "Current score": "",
+                "Users and Scores": {}
+            }
+
+        data["Current score"] = self.score
+
+        with open("data/score.json", "w") as file:
+            json.dump(data, file, indent=4)
+
     def check_full_lines(self):
         row = FIELD_H - 1
         for y in range(FIELD_H - 1, -1, -1):
             for x in range(FIELD_W):
                 self.field_array[row][x] = self.field_array[y][x]
-
                 if self.field_array[y][x]:
                     self.field_array[row][x].pos = vec(x, y)
             if sum(map(bool, self.field_array[y])) < FIELD_W:
@@ -58,7 +67,6 @@ class Tetris:
                 for x in range(FIELD_W):
                     self.field_array[row][x].alive = False
                     self.field_array[row][x] = 0
-
                 self.full_lines += 1
 
     def put_tetromino_blocks_in_array(self):
@@ -108,6 +116,7 @@ class Tetris:
             self.tetromino.update()
             self.check_tetromino_landing()
             self.get_score()
+            self.save_score()
         self.sprite_group.update()
 
     def draw(self):
