@@ -74,12 +74,18 @@ class Username:
         pg.init()
         self.screen = screen
         self.list_username = ""
+        self.under_username = ""
         self.before_username = "Enter your name"
 
     def draw(self):
         self.name = pg.font.Font(FONT_PATH, 40)
+        self.press = pg.font.Font(FONT_PATH, 20)
+
         self.name_rect = self.name.render(self.before_username or self.list_username, True, (233, 175, 135))
+        self.press_rect = self.press.render(self.under_username, True, (233, 175, 135))
+
         self.screen.blit(self.name_rect, (WIN_RES[0] / 2 - self.name_rect.get_width() / 2, 325))
+        self.screen.blit(self.press_rect, (WIN_RES[0] / 2 - self.press_rect.get_width() / 2, 375))
 
 
 class Endgame:
@@ -113,6 +119,7 @@ class Endgame:
                     self.save_username(self.username.list_username)
                 else:
                     self.username.before_username = ""
+                    self.username.under_username = "Press enter to validate"
                     self.username.list_username += event.unicode
 
     def save_username(self, username):
