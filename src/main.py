@@ -115,7 +115,9 @@ class Endgame:
             elif event.type == pg.KEYDOWN:
                 if event.key == pg.K_BACKSPACE:
                     self.username.list_username = self.username.list_username[:-1]
+                    self.username.under_username = "Press enter to validate"
                 elif event.key == pg.K_RETURN and self.username.list_username != "":
+                    self.username.under_username = "Username has been saved"
                     self.save_username(self.username.list_username)
                 else:
                     self.username.before_username = ""
@@ -138,6 +140,8 @@ class Endgame:
 
         elif data["Users and Scores"][username] < data["Current score"]:
             data["Users and Scores"][username] = data["Current score"]
+
+        data["Current score"] = 0
 
         with open("data/score.json", "w") as file:
             json.dump(data, file, indent=4)
