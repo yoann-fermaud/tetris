@@ -9,7 +9,7 @@ BG_COLOR = (25, 25, 25)
 SPRITE_DIR_PATH = "assets/sprites/"
 FONT_PATH = "assets/font/Kawai_pixel.TTF"
 
-ANIM_TIME_INTERVAL = 500  # milliseconds
+ANIM_TIME_INTERVAL = 400  # milliseconds
 FAST_ANIM_TIME_INTERVAL = 15
 
 TILE_SIZE = 40
