@@ -1,9 +1,7 @@
-import sys
-import pathlib
+import sys, json
 from src.tetris import Tetris, Text
-from src.settings import *
-
 from src.button import Button
+from src.settings import *
 
 
 class App:
@@ -12,8 +10,9 @@ class App:
         pg.display.set_caption("TETRIS")
         self.screen = pg.display.set_mode(WIN_RES)
         self.clock = pg.time.Clock()
-        self.set_timer()
         self.images = self.load_images()
+
+        self.set_timer()
         self.tetris = Tetris(self)
         self.text = Text(self)
 
@@ -29,6 +28,7 @@ class App:
         self.fast_user_event = pg.USEREVENT + 1
         self.anim_trigger = False
         self.fast_anim_trigger = False
+
         pg.time.set_timer(self.user_event, ANIM_TIME_INTERVAL)
         pg.time.set_timer(self.fast_user_event, FAST_ANIM_TIME_INTERVAL)
 
@@ -41,6 +41,7 @@ class App:
         self.screen.fill(color=FIELD_COLOR, rect=(0, 0, *FIELD_RES))
         self.tetris.draw()
         self.text.draw()
+
         pg.display.flip()
 
     def check_events(self):
@@ -60,7 +61,7 @@ class App:
     def run(self):
         while True:
             if self.tetris.game_over_flag:
-                Endgame().run()
+                Endgame(self.screen).run()
                 self.tetris.game_over_flag = False
             else:
                 self.check_events()
@@ -68,12 +69,25 @@ class App:
                 self.draw()
 
 
-class Endgame:
-    def __init__(self):
+class Username:
+    def __init__(self, screen):
         pg.init()
-        pg.display.set_caption("TETRIS")
-        self.screen = pg.display.set_mode(WIN_RES)
+        self.screen = screen
+        self.list_username = ""
+        self.before_username = "Enter your name"
+
+    def draw(self):
+        self.name = pg.font.Font(FONT_PATH, 40)
+        self.name_rect = self.name.render(self.before_username or self.list_username, True, (233, 175, 135))
+        self.screen.blit(self.name_rect, (WIN_RES[0] / 2 - self.name_rect.get_width() / 2, 325))
+
+
+class Endgame:
+    def __init__(self, screen):
+        self.screen = screen
+
         self.app = App()
+        self.username = Username(self.screen)
 
         self.button_play = Button(image=None, pos=(WIN_RES[0] / 2, 500), text_input="PLAY AGAIN",
                                   font=60, base_color="white", hovering_color=(233, 135, 193))
@@ -92,6 +106,34 @@ class Endgame:
                 elif self.button_quit.checkForInput(self.mouse_pos):
                     pg.quit()
                     sys.exit()
+            elif event.type == pg.KEYDOWN:
+                if event.key == pg.K_BACKSPACE:
+                    self.username.list_username = self.username.list_username[:-1]
+                elif event.key == pg.K_RETURN and self.username.list_username != "":
+                    self.save_username(self.username.list_username)
+                else:
+                    self.username.before_username = ""
+                    self.username.list_username += event.unicode
+
+    def save_username(self, username):
+        try:
+            with open("data/score.json", "r") as file:
+                data = json.load(file)
+
+        except ValueError:
+            data = {
+                "Current score": "",
+                "Users and Scores": {}
+            }
+
+        if username not in [i for i in data["Users and Scores"]]:
+            data["Users and Scores"][username] = data["Current score"]
+
+        elif data["Users and Scores"][username] < data["Current score"]:
+            data["Users and Scores"][username] = data["Current score"]
+
+        with open("data/score.json", "w") as file:
+            json.dump(data, file, indent=4)
 
     def draw(self):
         background = pg.image.load("assets/background/background_menu.png")
@@ -100,6 +142,8 @@ class Endgame:
         self.text = pg.font.Font(FONT_PATH, 80)
         self.text_rect = self.text.render("GAME OVER", True, (233, 175, 135))
         self.screen.blit(self.text_rect, (WIN_RES[0] / 2 - self.text_rect.get_width() / 2, 225))
+
+        self.username.draw()
 
         self.button_play.update(self.screen)
         self.button_quit.update(self.screen)
