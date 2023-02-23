@@ -4,7 +4,7 @@ from src.tetromino import Tetromino
 from src.settings import *
 
 
-class Text:
+class Text: # Right part of the game
     def __init__(self, app):
         self.app = app
         self.font = ft.Font(FONT_PATH)
@@ -20,7 +20,7 @@ class Text:
                             text=f"{self.app.tetris.score}", fgcolor="white", size=45)
 
 
-class Tetris:
+class Tetris: # Game itself
     def __init__(self, app):
         self.app = app
         self.sprite_group = pg.sprite.Group()
@@ -30,8 +30,9 @@ class Tetris:
         self.speed_up = False
         self.game_over_flag = False
 
-        self.score = 0
+        self.score = 0 # Initial score
         self.full_lines = 0
+        # The points obtained change in function of the number of lines destroyed
         self.points_per_lines = {0: 0, 1: 10, 2: 20, 3: 50, 4: 100}
 
     def get_score(self):
@@ -103,7 +104,7 @@ class Tetris:
         elif pressed_key == pg.K_DOWN:
             self.speed_up = True
 
-    def draw_grid(self):
+    def draw_grid(self): # Game grid, based on TILE_SIZE defined in settings.py 
         for x in range(FIELD_W):
             for y in range(FIELD_H):
                 pg.draw.rect(self.app.screen, BG_COLOR,

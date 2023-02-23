@@ -1,10 +1,10 @@
 import sys, json
-from src.main import App
+from src.game import App
 from src.button import Button
 from src.settings import *
 
 
-class Menu:
+class Menu: # It is the first page of the game
     def __init__(self):
         pg.init()
         pg.display.set_caption("TETRIS")
@@ -87,6 +87,8 @@ class Score:
                 "Users and Scores": {}
             }
 
+        # In the json files, we sort all the value in the descending order. We want to display only the highest scores.
+        # We have to use "reverse=True" to put the value in descending order, "item[1]"" indicates the ascending order
         sorted_scores = dict(sorted(data["Users and Scores"].items(), key=lambda item: item[1], reverse=True))
         data["Users and Scores"] = sorted_scores
 

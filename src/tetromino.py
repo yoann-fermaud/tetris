@@ -11,8 +11,6 @@ class Block(pg.sprite.Sprite):
 
         super().__init__(tetromino.tetris.sprite_group)
         self.image = tetromino.image
-        # self.image = pg.Surface([TILE_SIZE, TILE_SIZE])
-        # pg.draw.rect(self.image, "red", (1, 1, TILE_SIZE - 2, TILE_SIZE - 2), border_radius=8)
         self.rect = self.image.get_rect()
 
     def is_alive(self):
@@ -43,8 +41,13 @@ class Block(pg.sprite.Sprite):
 class Tetromino:
     def __init__(self, tetris, current=True):
         self.tetris = tetris
-        self.shape = random.choice(list(TETROMINOES.keys()))
+
+        # The shape of the block is chosen by the random function. Then,
+        # we associate this shape to a sprite, according to the number of the
+        # shape. So, each shape has a predifined color.
+        self.shape = random.choice(list(TETROMINOES.keys())) 
         self.image = tetris.app.images[int(self.shape)]
+        
         self.blocks = [Block(self, pos) for pos in TETROMINOES[self.shape]]
         self.landing = False
         self.current = current
